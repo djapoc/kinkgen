@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Message Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #000000;
+      color:#FFFFFF;
+    }
+    .controls {
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    #message {
+      margin-top: 1rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #ffffff;
+      text-align: center;
+      max-width: 80%;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      font-size: 1.5rem;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+      background-color: #ff00ae;
+      color: white;
+    }
+    button:hover {
+      background-color:#2d93cf;
+    }
+    input[type="number"] {
+      width: 60px;
+      margin-left: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="controls">
+    <label>
+      <input type="checkbox" id="toggle">
+      Degradation/CNC Mode
+    </label><br><br>
+    <button id="generateBtn">Generate</button><br><br>
+    <button id="autoToggleBtn">Start Auto</button><br><br>
+    <label for="intervalInput">Interval (s):</label>
+    <input type="number" id="intervalInput" value="15" min="5">
+  </div>
+  <div id="message">Click "Generate" to see a message.</div>
+
+  <script>
+    // Arrays for names and statements
+    const positiveAdjectives = [
+      "Cute",
+      "Adorable",
+      "Beautiful",
+      "Sexy",
+      "Little",
+      "Cute little",
+      "Adorable little",
+      "Beautiful little",
+      "Sexy little",
+      "My little",
+      "Daddy's little"
+    ];
+
+    const positiveNames = [
+      "good girl",
+      "toy",
+      "pet",
+      "puppy",
+      "princess",
+      "baby girl",
+      "baby doll",
+      "sex doll",
+      "girl",
+      "cum absorber",
+      "baby incubator",
+      "baby maker",
+      "breeding partner"
+    ];
+
+    const positiveStatements = [
+      "you're already so wet and ready for me and we haven't even really begun!",
+      "you're dripping wet aren't you? You might as well tell the truth because I'm going to fucking check anyway",
+      "you're such a needy little slut, and I love a horny little slut.",
+      "you like begging for my cock, don't you? Tell me how much you want it.",
+      "if you want it, beg for it. I only please good girls.",
+      "you deserve to be fucked don't you?",
+      "Can’t you live without my cock inside you?",
+      "I’m gonna tear you apart.",
+      "I’m not going to be gentle with you.",
+      "you wouldn’t be so wet if you didn’t want me touching you.",
+      "your mouth keeps telling me no, but your wet pussy is telling me yes.",
+      "I can’t help it, you were teasing me and now you get what you deserve.",
+      "you're going to do what I tell you when I tell you to do it because you're MINE.",
+      "you’re my little plaything to torture for my own amusement.",
+      "you’re my perfect little fuck toy.",
+      "it’s your job to make sure I cum inside you and get my needs taken care of.",
+      "it's really cute how much you beg to be used, as if you had a choice in how I want to enjoy my plaything",
+      "your body is mine. Your orgasms are mine. YOU are mine.",
+      "I’m going to use this horny pussy. It’s mine.",
+      "I own every inch of you. You belong to me.",
+      "I can’t wait to fill you with cum. You’re gonna be good and take all of it, aren’t you?",
+      "it takes someone really special to be such a horny little fucktoy.",
+      "what are you going to do to earn an orgasm today? Hmm?",
+      "remember who you cum for. You cum on MY fucking command!",
+      "you’re so cute when you try to fight back.",
+      "look me in the eyes while I fuck you.",
+      "if you want me to stop, you’ll have to do better than that.",
+      "squirm for me a little more.",
+      "good girls do as they’re told. If you’re a good girl and do as you’re told, you might get a reward.",
+      "you’re mine, no one else can touch you.",
+      "you’re being so good for me.",
+      "you’re my favorite possession. You're such a good toy.",
+      "do you like being daddy’s little fleshlight?",
+      "do you enjoy being daddy’s little cumdumpster? Beg for it.",
+      "I want you to be a good little slut for daddy and let me use that pretty little throat till you’re crying and begging.",
+      "do you think you can hold all this cum for me, Princess?",
+      "be a good girl and cum for me, Princess.",
+      "be a good girl a cum on daddy’s dick.",
+      "is my pretty little girl enjoying herself?",
+      "Who’s Daddy’s favorite toy?",
+      "Daddy loves his dirty little whore.",
+      "you might be a good girl, but I'm going to treat you like a bad one because you fucking love it.",
+      "you’re such a fun little fuck toy. I love playing with you.",
+      "you can do anything you want, as long as my cock is inside you.",
+      "you’re so tight and wet. I love how your greedy little cunt sucks my cock.",
+      "you're such a good little cock sucker aren't you? I bet you'd love to cum with my cock in your mouth.",
+      "why’s my kitten so needy already? I’ve barely touched you.",
+      "be a good little slut for me.",
+      "who is a good little slut?",
+      "you're so wet, you were just waiting for me, weren't you?",
+      "you've been a good girl, and now you're gonna get what you deserve.",
+      "you've been good and now we're going to find out just how much you can take.",
+      "it's a good thing daddy is here to keep you out of trouble.",
+      "show me why you are my favorite little fucktoy.",
+      "did you tell you that you could cum yet? That pussy is not your property. It is mine. I'm going to teach you how to behave.",
+      "you're a good little pet. Go get your leash and we can practice with your mouth.",
+      "cum for me. It's what you're made for.",
+      "your pussy belongs to daddy, doesn't it?",
+      "only I get to make your entire body shake like this.",
+      "do you want me to pin you down and fuck you from behind until you beg me to let you cum?",
+      "the only words you are allowed to say are “I’m close, I’m gonna cum, and I’m cumming” do you understand?",
+      "is that all you've got? I can’t hear you sweetheart, gotta be louder than that, or else I'll stop and leave you here.",
+      "scream into the pillow as you beg to have my baby.",
+      "you look so pretty when I’m fucking you.",
+      "show me how good of a toy you are.",
+      "don’t talk back to me unless you want to be punished.",
+      "be a good little kitty, and lap up all your milk.",
+      "you look so beautiful when you look at me with those eyes, so hungry and desperate for me.",
+      "who's daddy’s hole to use and abuse?",
+      "daddy is going to use his little toy so fucking much.",
+      "you’re so well trained!",
+      "I wanna see you beg for it, show me how much you need it.",
+      "you're such a good little cock-sucker!",
+      "I love your cute moans. Whimper for me.",
+      "I love your little cunt. Spread it for me. Show me how wet it is for me.",
+      "I'm going to defile your innocent little body.",
+      "you’re such a pleasure to use!",
+      "I'm so proud of you for taking my cock so well!",
+      "you’re so beautiful when you struggle for me.",
+      "I love the way you look when you’re on your knees.",
+      "you’re the best good girl.",
+      "I’ve been waiting all day to put my cock in you.",
+      "you're such a good fucking girl.",
+      "you are the perfect fuckdoll.",
+      "you’re doing so good, baby.",
+      "you have such a perfect little pussy… I love it so much.",
+      "you look so fucking sexy right now. I love your body so much.",
+      "I could spend all day inside you.",
+      "your beautiful body feels so good in my hands.",
+      "what you’re doing feels amazing, keep doing that.",
+      "I love it when I can feel you squeeze your pussy around me.",
+      "I have something for you. I’m going to bury my cock in your mouth. Take it all in that tight little throat.",
+      "I want to tear your clothes off right now. I want to strip you naked as soon as I see you.",
+      "I want to fuck you until I can feel that sweet little pussy clenching around my cock.",
+      "I’m going to make you scream with pleasure. How fast do you think I can make you cum?",
+      "you’re going to forget your name after I’m done fucking you tonight.",
+      "you’re such a good little girl. How horny are you right now? Do you want me to make you cum?",
+      "tell me what you want daddy to do to you.",
+      "thank you for fucking me so well, I’m going to show you off to everyone.",
+      "you taste so damn sweet. I could eat you for every meal.",
+      "are you going to be a good girl and have my baby for me?"
+    ];
+
+    const negativeAdjectives = [
+      "Slutty",
+      "Whorish",
+      "Dirty",
+      "Dumb",
+      "Stupid",
+      "Pathetic",
+      "Useless",
+      "Needy",
+      "Worthless",
+      "Filthy",
+      "Poor",
+      "Cum hungry",
+      "Greedy",
+      "Desperate",
+      "Perverted",
+      "Small and useless",
+      "Cum-brained"
+    ];
+
+    const negativeNames = [
+      "slut",
+      "whore",
+      "cumslut",
+      "bitch",
+      "dog",
+      "cumdumpster",
+      "fucktoy",
+      "cumbucket",
+      "attention whore",
+      "slave",
+      "dog in heat",
+      "bitch in heat",
+      "cum dump",
+      "cock sucker",
+      "fuck meat",
+      "fuck hole",
+      "cum rag",
+      "breeding slut",
+      "cum hole",
+      "breeding bitch",
+      "little baby",
+      "piece of meat",
+      "bottomless cum pit",
+      "prostitute"
+    ];
+
+    const negativeStatements = [
+      "I might leave you like this, you’re such a dripping mess for me",
+      "you love choking on my cock don't you?",
+      "I never knew you could be such a dirty whore",
+      "what would your friends say if they knew how desperately you want my cum inside you?",
+      "you're such an eager slut that you can't even control yourself when you think about being a cumdump.",
+      "you're such a dirty whore that you're okay with having an entire crowd watch me fuck you, aren't you?",
+      "you would have to behave really well to be worthy of sucking my dick.",
+      "do you want me to put you up against a window and fuck you for everyone to see? What would they think to see such an innocent looking girl getting fucked?",
+      "isn't it pathetic how much you need to feel used to get off?",
+      "seeing how much of a greedy horny sex-hungry slut you are whenever I'm near, I wonder how you're even able to go about your day while constantly craving to be fucked and used by me.",
+      "you only misbehave because you know I’ll fuck your attitude out of you.",
+      "you’re so loud, do you want the whole neighborhood to know how much of a whore you are?",
+      "you love to be used like this, don’t you?",
+      "you were made to be used like the whore you are.",
+      "you should be thankful I fuck such a worthless slut like you.",
+      "admit it, you’re just a filthy slut who’s desperate for my cock.",
+      "don't you love being my little three-hole whore?",
+      "do you enjoy being used as my pretty little fuck hole?",
+      "don't you know that serving my cock is your purpose?",
+      "you're MY dirty little fucking cumslut.",
+      "you aren't worthy to cum.",
+      "girls who disobey their master don’t deserve cock, do they?",
+      "fucking beg and make it believable. Pathetic. Go again.",
+      "you are going to obey me. Not because I forced you. Not because of any punishment. Not because you need to. Not even because you want to. Not because of any spell. You are going to do it because you would give up your soul to make me smile. Now be a good little whore and obey.",
+      "you’re nothing but my fuckpet to keep tied next to my desk to call over and suck me off whenever I need a break from work.",
+      "we both know that you'd rather live your life as my personal cumdump than anything else.",
+      "you exist because I allow you to. Every breath you take is mine. I own you.",
+      "you’re just a piece of meat for me to own and fuck.",
+      "you’re here for my pleasure, not yours.",
+      "stay still, fucktoys don’t move.",
+      "you’re far too small and weak to fight against me, even if you want to.",
+      "I want to tease you till you’re begging for me to use you like the brainless cumdump you are.",
+      "you're mine to use for my pleasure until I'm done with you.",
+      "who fucking owns you?",
+      "do you know how long I had to wait for you? Don’t you EVER make me wait that long to fuck you again!",
+      "convince me, why should I let a slut like you cum?",
+      "you have no say in this. You’re going to take it whether you like it or not.",
+      "I’m going to fuck you as much as I want, for long as I want and as hard as I want, and you’re going to take it.",
+      "you’re going to enjoy this, sooner or later. You better get used to it, I won’t let you go.",
+      "you’re going to satisfy me, whether you like it or not.",
+      "you’re not going anywhere. Begging won’t save you.",
+      "shut up and take it.",
+      "we’re done when I say we’re done.",
+      "I won’t stop even if you scream. I want you to scream for me.",
+      "you’re gonna take whatever I give you without hesitation.",
+      "bark for me like the bitch you are.",
+      "every piece of you is mine, and I can do whatever I want to you.",
+      "whose pussy is this?",
+      "whose whore are you?",
+      "Struggle all you want but you're going nowhere until you're dripping with my cum.",
+      "I want to watch you moan as I punish you for making daddy wait so long to use you.",
+      "do you want to be dripping with my cum? Your slutty little pussy doesn’t deserve it, beg for it.",
+      "you exist as nothing more than a pretty little hole for me to fill with cum.",
+      "you're nothing but a cheap whore for me to breed.",
+      "you're just a baby incubator.",
+      "your only purpose is to bear my children.",
+      "I’m going to breed you, whether you like it or not. And don't you dare take birth control.",
+      "you’re desperate for me to breed your slutty little pussy, aren’t you?",
+      "only a whore would get so wet from being used like this.",
+      "only good girls get lube. You get spit.",
+      "I'm not surprised that a slut like you would enjoy that.",
+      "is my dirty whore enjoying herself?",
+      "only a slut loves cum as much as you do.",
+      "you're just a full-sized fleshlight who gets off on being owned and fucked.",
+      "look at how horny you are. If I let you loose you would be humping everything in sight wouldn’t you?",
+      "do you know what a little slut you are?",
+      "get on your knees and take it like the bitch you are.",
+      "you're my dirty little whore. Say it. Tell me. What are you?",
+      "what do you deserve right now, my little slut?",
+      "you're just a fleshlight that cries.",
+      "you don't deserve to feel this good.",
+      "tell me you don't deserve me. I want to hear you say it.",
+      "do you think you actually deserve this dick?",
+      "a filthy whore like you doesn’t deserve to touch me, do you?",
+      "who’s a stupid dog, to get yourself into such a predicament? What a dumb bitch, only useful for breeding.",
+      "where do you belong? Under my feet? That’s right. Know your place. You belong to me. You’re just a piece of property that I own.",
+      "you're just a stupid set of holes, aren't you?",
+      "get down on the floor, you know dogs aren't allowed on the furniture.",
+      "maybe I'll make you suck my cock in public and let some strangers look at your exposed pussy as I cum in your mouth.",
+      "maybe I'll fuck you in public and force you to make eye contact with strangers as I fill your pussy with my warm cum.",
+      "you can’t hold back because you’re a filthy degenerate who thinks about nothing but cumming, aren't you?",
+      "you’re going to cum for me so fast that you’ll humiliate yourself. And you’re going to thank me for it.",
+      "you can’t fucking resist doing sick, depraved things in service to my cock, can you?",
+      "I thought you wanted daddy to beat you? I thought you loved being spanked? Not so hard now, are you, little girl?",
+      "your only purpose is to be a fuck toy for daddy, so why should daddy let you cum?",
+      "open up those legs, you are just my little hole to fuck.",
+      "do not cum, you are just a hole.",
+      "what a pretty little dumb bitch you are. Don't worry about not being smart, at least you have a sexy little body and a pretty face.",
+      "what makes you think you're worthy of carrying my baby?",
+      "why should I bother to breed a whore like you?"
+    ];
+
+    // Get DOM elements
+    const toggleCheckbox = document.getElementById('toggle');
+    const generateButton = document.getElementById('generateBtn');
+    const autoToggleBtn = document.getElementById('autoToggleBtn');
+    const intervalInput = document.getElementById('intervalInput');
+    const messageDiv = document.getElementById('message');
+
+    let intervalId = null;
+
+    // Generate a random name and statement on button click
+    function generateMessage() {
+      const useNegative = toggleCheckbox.checked;
+      const adjectives = useNegative ? negativeAdjectives : positiveAdjectives;
+      const names = useNegative ? negativeNames : positiveNames;
+      const statements = useNegative ? negativeStatements : positiveStatements;
+      const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+      const name = names[Math.floor(Math.random() * names.length)];
+      const statement = statements[Math.floor(Math.random() * statements.length)];
+
+      messageDiv.textContent = `${adjective} ${name}, ${statement}`;
+    }
+         // Manual generation button
+    generateButton.addEventListener('click', generateMessage);
+
+        // Toggle auto-generation
+        autoToggleBtn.addEventListener('click', () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+        autoToggleBtn.textContent = 'Start Auto';
+      } else {
+        const intervalSeconds = parseInt(intervalInput.value) || 30;
+        intervalId = setInterval(generateMessage, intervalSeconds * 1000);
+        autoToggleBtn.textContent = 'Stop Auto';
+        generateMessage(); // Generate immediately
+      }
+    });
+  </script>
+</body>
+</html>
